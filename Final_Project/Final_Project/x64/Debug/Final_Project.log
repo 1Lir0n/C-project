@@ -1,0 +1,4 @@
+﻿  Library.c
+C:\Users\liron\source\repos\Final_Project\Final_Project\Library.c(229,26): warning C4047: 'function': 'tm *const ' differs in levels of indirection from 'tm *(__cdecl *)(const time_t *const )'
+C:\Users\liron\source\repos\Final_Project\Final_Project\Library.c(229,26): warning C4024: 'mktime': different types for formal and actual parameter 1
+  Final_Project.vcxproj -> C:\Users\liron\source\repos\Final_Project\x64\Debug\Final_Project.exe
