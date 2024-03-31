@@ -42,7 +42,7 @@ int search_id(struct LibMember mem[], int n, char id[]) {
 
 
 
-//D. Main functions
+//D. 
 
 //prints a menu and awaits user input
 int menu() {
@@ -62,8 +62,7 @@ int menu() {
 
 	if (!(response < 8 && response>0)) {
 		printf("Wrong input please provide a number between 1-7.\n\n");
-		int c;
-		while ((c = getchar()) != '\n' && c != EOF);//remove any lingering data in line
+		clear();
 		response = menu();
 	}
 	return response;
@@ -74,20 +73,19 @@ int menu() {
 //E.
 
 //adds member data to the total members and sorts it
-int add_member(struct LibMember mem[], int n) {
+void add_member(struct LibMember mem[], int *n) {
 
 	if (n == 300) {
 		printf("Exceeded the allowed member count.\n");
-		return 0;
+		return;
 	}
-	struct Date date;
-	char buffer[100];
+	struct Date date = {0,0,0};
+	char buffer[100] = { 0 };
 
 	//Name
 	do {
 		printf("Enter member's full name: \n");
-		int c;
-		while ((c = getchar()) != '\n' && c != EOF);//remove any lingering data in line
+		clear();
 		fgets(buffer, sizeof(buffer), stdin); // Read full name from user input
 		buffer[strcspn(buffer, "\n")] = '\0';
 		if(!only_letters_and_spaces(buffer)){
@@ -96,27 +94,27 @@ int add_member(struct LibMember mem[], int n) {
 	} while (!only_letters_and_spaces(buffer));
 	
 	// Dynamically allocate memory for the full name
-	mem[n].Name = (char*)malloc((strlen(buffer) + 1) * sizeof(char));
+	mem[*n].Name = (char*)malloc((strlen(buffer) + 1) * sizeof(char));
 	
 	// Copy the name from the buffer to the allocated memory
-	strcpy(mem[n].Name, buffer);
-	capitalize(mem[n].Name);
+	strcpy(mem[*n].Name, buffer);
+	capitalize(mem[*n].Name);
 
 	//id
-	char id[10];
+	char id[10] = { 0 };
 	do {
 		printf("Enter ID:\n");
 		scanf("%s", &id);
 		if (!valid_id(id)) printf("Please enter a 9 digit number.\n\n");
 	} while (!valid_id(id));
-	if (id_exist(mem, n, id)) {
+	if (id_exist(mem, *n, id)) {
 		printf("An account with this Id already exist. Index(from 0):%d\n", search_id(mem, n, id));
-		return 0;
+		return;
 	}
-	strcpy(mem[n].Id, id);
+	strcpy(mem[*n].Id, id);
 
 	//date of birth
-	int d, m, y;
+	int d=0, m=0, y=0;
 	do {
 		printf("Enter date of birth. in this format: dd mm yyyy\n");
 		scanf_s("%d %d %d", &d, &m, &y);
@@ -126,17 +124,16 @@ int add_member(struct LibMember mem[], int n) {
 	date.Day = d;
 	date.Month = m;
 	date.Year = y;
-	mem[n].DateOfBirth = date;
+	mem[*n].DateOfBirth = date;
 	
 	//default 
-	mem[n].nBooks = 0;
+	mem[*n].nBooks = 0;
 
-	n=n+1;
+	(*n)++;
 
 	//sort when done
-	sort_members(mem, n);
+	sort_members(mem, *n);
 
-	return 1;
 }
 
 
@@ -145,7 +142,7 @@ int add_member(struct LibMember mem[], int n) {
 
 //loan book for member via id
 void loan_books(struct LibMember mem[], int n) {
-	char id[10];
+	char id[10] = { 0 };
 	printf("Enter ID: ");
 	scanf("%s", &id);
 	//checks for member
@@ -167,8 +164,7 @@ void loan_books(struct LibMember mem[], int n) {
 	}
 	char buffer[100];
 	printf("Enter book name: ");
-	int c;
-	while ((c = getchar()) != '\n' && c != EOF);//remove any lingering data in line
+	clear();
 	fgets(buffer, sizeof(buffer), stdin); // Read full name from user input
 	buffer[strcspn(buffer, "\n")] = '\0';
 	// Dynamically allocate memory for the full name
@@ -209,7 +205,52 @@ void loan_books(struct LibMember mem[], int n) {
 
 
 
-//G. ofek
+//G
+
+void return_book(struct LibMember mem[], int n) {
+	char id[10] = { 0 };
+	char buffer[100] = { 0 };
+
+	printf("Enter member's id:\n");
+	scanf("%s", id);
+
+	int index = search_id(mem, n, id);
+
+	if (index < 0) {
+		printf("A member with the ID: %s was not found.\n", id);
+		return;
+	}
+
+	print_member(&mem[index]);
+
+	if (mem[index].nBooks == 0) {
+		printf("The member doesn't have any loaned books.\n");
+		return;
+	}
+	else {
+		printf("Enter the name of the book to return:\n");
+		clear();
+		fgets(buffer, sizeof(buffer), stdin);
+		buffer[strcspn(buffer, "\n")] = '\0';
+		char* name = (char*)malloc((strlen(buffer) + 1) * sizeof(char));
+		strcpy(name, buffer);
+		capitalize(name);
+
+		struct Book loan[4] = { 0 };
+		int j = 0;
+		for (int i = 0; i < mem[index].nBooks;i++) {
+			if (strcmp(mem[index].LoanBooks[i].BookName, name) != 0) {
+				loan[j] = mem[index].LoanBooks[i];
+				j++;
+			}
+		}
+		
+		mem[index].nBooks-=1;
+
+		*mem[index].LoanBooks = *loan;
+		printf("The book: %s was removed successfully.\n", name);
+	}
+}
 
 
 
@@ -249,6 +290,39 @@ void check_book_overdue(struct LibMember mem[],int n) {
 
 
 
+//I.
+
+//delete a member via ID
+void delete_member(struct LibMember mem[], int* nMem) {
+	char id[10] = {0};
+	printf("Enter the member's ID you would like to delete: ");
+	scanf("%s", id);
+
+	// Find the index of the member with the provided ID
+	int index = search_id(mem, *nMem, id);
+
+	if (index == -1) {
+		printf("Member with ID %s not found.\n", id);
+		return;
+	}
+	printf("\nThe member:\n ");
+	print_member(&mem[index]);
+	// Free memory for the member to be deleted
+	free(mem[index].Name);
+
+	// If the member to be deleted is not the last member, move the last member to its position
+	if (index < *nMem - 1) {
+		mem[index] = mem[*nMem - 1];
+	}
+
+	// Reduce the count of total members
+	(*nMem)--;
+	sort_members(mem, *nMem);
+	printf("\nwas deleted successfully.\n");
+}
+
+
+
 //J.
 
 //prints the array data
@@ -262,33 +336,33 @@ void print_members(struct LibMember mem[], int n) {
 
 
 //K.
-int quit() {
-	printf("Quiting the system in 3 seconds...\n");
-	Sleep(1000);
-	printf("2 seconds...\n");
-	Sleep(1000);
-	printf("1 seconds...\n");
-	Sleep(1000);
-	return 0;
+void quit(struct LibMember mem[], int nMem) {
+	// Free dynamically allocated memory for each member's name
+	for (int i = 0; i < nMem; i++) {
+		free(mem[i].Name);
+	}
+
+	printf("Quitting the program...\n");
+	exit(0);
 }
 
 
 
-struct LibMember mem[300];
-
+//L
 
 //program exe
 int main() {
+	struct LibMember mem[300];
 	int nMem = 0;    // number of current members can't exceed 300
 	int userInput = 0;
 	while (true) {
 		userInput = menu();
-		if (userInput == 1) nMem += add_member(mem, nMem);
+			 if (userInput == 1) add_member(mem, &nMem);
 		else if (userInput == 2) loan_books(mem, nMem);
-		else if (userInput == 3);
+		else if (userInput == 3) return_book(mem,nMem);
 		else if (userInput == 4) check_book_overdue(mem, nMem);
-		else if (userInput == 5);
+		else if (userInput == 5) delete_member(mem,&nMem);
 		else if (userInput == 6) print_members(mem, nMem);
-		else if (userInput == 7) return quit();
+		else if (userInput == 7) quit(mem,nMem);
 	}
 }

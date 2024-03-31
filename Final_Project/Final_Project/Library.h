@@ -126,3 +126,9 @@ bool contains_one(const int array[], int size) {
 	}
 	return false; // If no 1 is found, return false
 }
+
+//clears lingering text data
+void clear() {
+	int c = 0;
+	while ((c = getchar()) != '\n' && c != EOF);//remove any lingering data in line
+}
