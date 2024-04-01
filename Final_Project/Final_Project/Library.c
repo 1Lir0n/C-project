@@ -101,12 +101,15 @@ void add_member(struct LibMember mem[], int *n) {
 	capitalize(mem[*n].Name);
 
 	//id
-	char id[10] = { 0 };
+	char id[20];
 	do {
 		printf("Enter ID:\n");
-		scanf("%s", &id);
-		if (!valid_id(id)) printf("Please enter a 9 digit number.\n\n");
+		fgets(id, sizeof(id), stdin);
+		if (!valid_id(id) || strlen(id) > 9) {
+			printf("Please enter a 9 digit number.\n\n");
+		}
 	} while (!valid_id(id));
+	clear();
 	if (id_exist(mem, *n, id)) {
 		printf("An account with this Id already exist. Index(from 0):%d\n", search_id(mem, n, id));
 		return;
@@ -243,16 +246,11 @@ void return_book(struct LibMember mem[], int n) {
 				loan[j] = mem[index].LoanBooks[i];
 				j++;
 			}
-			else {
-				free(mem[index].LoanBooks[i].BookName);
-				free(mem[index].LoanBooks[i].AuthorName);
-			}
 		}
 		
 		mem[index].nBooks-=1;
 		*mem[index].LoanBooks = *loan;
 		printf("The book: %s was removed successfully.\n", name);
-		free(name);
 	}
 }
 
@@ -340,12 +338,12 @@ void print_members(struct LibMember mem[], int n) {
 
 
 //K.
+
+//free allocated memory and quit the program
 void quit(struct LibMember mem[], int nMem) {
 	// Free dynamically allocated memory for each member's name
 	for (int i = 0; i < nMem; i++) {
 		free(mem[i].Name);
-		free(mem[i].LoanBooks->BookName);
-		free(mem[i].LoanBooks->AuthorName);
 	}
 
 	printf("Quitting the program...\n");
