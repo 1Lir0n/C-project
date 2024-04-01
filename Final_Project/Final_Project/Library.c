@@ -243,12 +243,16 @@ void return_book(struct LibMember mem[], int n) {
 				loan[j] = mem[index].LoanBooks[i];
 				j++;
 			}
+			else {
+				free(mem[index].LoanBooks[i].BookName);
+				free(mem[index].LoanBooks[i].AuthorName);
+			}
 		}
 		
 		mem[index].nBooks-=1;
-
 		*mem[index].LoanBooks = *loan;
 		printf("The book: %s was removed successfully.\n", name);
+		free(name);
 	}
 }
 
@@ -340,6 +344,8 @@ void quit(struct LibMember mem[], int nMem) {
 	// Free dynamically allocated memory for each member's name
 	for (int i = 0; i < nMem; i++) {
 		free(mem[i].Name);
+		free(mem[i].LoanBooks->BookName);
+		free(mem[i].LoanBooks->AuthorName);
 	}
 
 	printf("Quitting the program...\n");
