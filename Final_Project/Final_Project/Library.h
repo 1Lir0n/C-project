@@ -78,6 +78,9 @@ bool only_letters_and_spaces(const char* text) {
 
 //checks if the provided id is valid (9 digits)
 bool valid_id(char Id[]) {
+	if (strlen(Id) > 10) {
+		return false;
+	}
 	//checks if the char is comprised of only digits
 	for (int i = 0; i < 9; i++)
 	{

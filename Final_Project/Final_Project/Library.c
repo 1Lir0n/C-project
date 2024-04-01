@@ -105,11 +105,10 @@ void add_member(struct LibMember mem[], int *n) {
 	do {
 		printf("Enter ID:\n");
 		fgets(id, sizeof(id), stdin);
-		if (!valid_id(id) || strlen(id) > 9) {
+		if (!valid_id(id)) {
 			printf("Please enter a 9 digit number.\n\n");
 		}
 	} while (!valid_id(id));
-	clear();
 	if (id_exist(mem, *n, id)) {
 		printf("An account with this Id already exist. Index(from 0):%d\n", search_id(mem, n, id));
 		return;
