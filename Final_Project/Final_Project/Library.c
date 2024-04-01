@@ -82,10 +82,11 @@ void add_member(struct LibMember mem[], int *n) {
 	struct Date date = {0,0,0};
 	char buffer[100] = { 0 };
 
-	//Name
+	//Name	
+	clear();
+
 	do {
 		printf("Enter member's full name: \n");
-		clear();
 		fgets(buffer, sizeof(buffer), stdin); // Read full name from user input
 		buffer[strcspn(buffer, "\n")] = '\0';
 		if(!only_letters_and_spaces(buffer)){
@@ -103,13 +104,15 @@ void add_member(struct LibMember mem[], int *n) {
 	//id
 	char id[20] = { 0 };
 	do {
+		id[0] = '\0';
 		printf("Enter ID:\n");
 		fgets(id, sizeof(id), stdin);
+		id[strcspn(id, "\n")] = '\0';
+
 		if (!valid_id(id)) {
 			printf("Please enter a 9 digit number.\n\n");
 		}
 	} while (!valid_id(id));
-	id[strcspn(id, "\n")] = '\0';
 	if (id_exist(mem, *n, id)) {
 		printf("An account with this Id already exist. Index(from 0):%d\n", search_id(mem, n, id));
 		return;
