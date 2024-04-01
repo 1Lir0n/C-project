@@ -44,6 +44,7 @@ void capitalize(char str[]) {
 		{
 			//if space is found, check next character
 			++i;
+			if (str[i] == '\0') return;
 			//check next character is lowercase alphabet
 			if (str[i] >= 'a' && str[i] <= 'z') {
 				str[i] = str[i] - 32; //subtract 32 to make it capital
@@ -59,7 +60,7 @@ void capitalize(char str[]) {
 }
 
 //checks if string is madee of only letters and spaces
-bool only_letters_and_spaces(const char* text) {
+bool only_letters_and_spaces(char* text) {
 	while (*text != '\0') {
 		// Check if the character is an uppercase letter (A-Z)
 		if ((*text >= 'A' && *text <= 'Z') ||

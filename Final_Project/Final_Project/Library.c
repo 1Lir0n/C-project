@@ -83,8 +83,8 @@ void add_member(struct LibMember mem[], int *n) {
 	char buffer[100] = { 0 };
 
 	//Name	
-	clear();
 
+	clear();
 	do {
 		printf("Enter member's full name: \n");
 		fgets(buffer, sizeof(buffer), stdin); // Read full name from user input
@@ -113,6 +113,7 @@ void add_member(struct LibMember mem[], int *n) {
 			printf("Please enter a 9 digit number.\n\n");
 		}
 	} while (!valid_id(id));
+
 	if (id_exist(mem, *n, id)) {
 		printf("An account with this Id already exist. Index(from 0):%d\n", search_id(mem, n, id));
 		return;
@@ -127,9 +128,11 @@ void add_member(struct LibMember mem[], int *n) {
 		if (!((d > 0 && d <= 30) && (m > 0 && m <= 12) && (y >= 1900)))
 			printf("Please enter a vaild date of birth.\n\n");
 	} while (!((d > 0 && d <= 30) && (m > 0 && m <= 12) && (y >= 1900)));
+
 	date.Day = d;
 	date.Month = m;
 	date.Year = y;
+
 	mem[*n].DateOfBirth = date;
 	
 	//default 
@@ -200,8 +203,7 @@ void loan_books(struct LibMember mem[], int n) {
 	// Convert the current time to a struct tm
 	struct tm* localTime = localtime(&currentTime);
 	int d = localTime->tm_mday;//get the day
-	if (d == 31) d = 30;//normalize to 30
-	localTime->tm_mday = d + 30;//move 1 month ahead
+	localTime->tm_mday = d + 31;//move 1 month ahead
 	mktime(localTime);//make it a true date
 	struct Date rDate = { d, localTime->tm_mon+1, localTime->tm_year + 1900 };
 	m->LoanBooks[m->nBooks].ReturnDate = rDate;
