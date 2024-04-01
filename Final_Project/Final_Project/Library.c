@@ -101,7 +101,7 @@ void add_member(struct LibMember mem[], int *n) {
 	capitalize(mem[*n].Name);
 
 	//id
-	char id[20];
+	char id[20] = { 0 };
 	do {
 		printf("Enter ID:\n");
 		fgets(id, sizeof(id), stdin);
@@ -109,6 +109,7 @@ void add_member(struct LibMember mem[], int *n) {
 			printf("Please enter a 9 digit number.\n\n");
 		}
 	} while (!valid_id(id));
+	id[strcspn(id, "\n")] = '\0';
 	if (id_exist(mem, *n, id)) {
 		printf("An account with this Id already exist. Index(from 0):%d\n", search_id(mem, n, id));
 		return;
