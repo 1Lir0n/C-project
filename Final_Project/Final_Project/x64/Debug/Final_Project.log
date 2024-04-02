@@ -1,7 +1,6 @@
 ﻿  Library.c
-C:\Users\liron\source\repos\C-project\Final_Project\Final_Project\Library.c(78,8): warning C4047: '==': 'int *' differs in levels of indirection from 'int'
-C:\Users\liron\source\repos\C-project\Final_Project\Final_Project\Library.c(118,86): warning C4047: 'function': 'int' differs in levels of indirection from 'int *'
-C:\Users\liron\source\repos\C-project\Final_Project\Final_Project\Library.c(118,86): warning C4024: 'search_id': different types for formal and actual parameter 2
-C:\Users\liron\source\repos\C-project\Final_Project\Final_Project\Library.c(282,26): warning C4047: 'function': 'tm *const ' differs in levels of indirection from 'tm *(__cdecl *)(const time_t *const )'
-C:\Users\liron\source\repos\C-project\Final_Project\Final_Project\Library.c(282,26): warning C4024: 'mktime': different types for formal and actual parameter 1
+C:\Users\liron\source\repos\C-project\Final_Project\Final_Project\Library.h(88,8): warning C4013: 'isdigit' undefined; assuming extern returning int
+  (compiling source file 'Library.c')
+  
+C:\Users\liron\source\repos\C-project\Final_Project\Final_Project\Library.c(77,8): warning C4047: '==': 'int *' differs in levels of indirection from 'int'
   Final_Project.vcxproj -> C:\Users\liron\source\repos\C-project\Final_Project\x64\Debug\Final_Project.exe

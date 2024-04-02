@@ -59,7 +59,7 @@ void capitalize(char str[]) {
 	}
 }
 
-//checks if string is madee of only letters and spaces
+//checks if string is made from only letters and spaces
 bool only_letters_and_spaces(char* text) {
 	while (*text != '\0') {
 		// Check if the character is an uppercase letter (A-Z)
@@ -90,6 +90,17 @@ bool valid_id(char Id[]) {
 	}
 	return true;
 }
+//for registerd members, asks for id and checks it
+bool getId(char id[]) {
+	printf("Enter member's id:\n");
+	scanf("%10s", id);
+	if (!valid_id(id)) {
+		printf("not a valid id.\n");
+		return 0;
+	}
+	return 1;
+}
+
 
 //checks if given id is used already
 bool id_exist(struct LibMember mem[], int n, char id[]) {
@@ -135,4 +146,10 @@ bool contains_one(const int array[], int size) {
 void clear() {
 	int c = 0;
 	while ((c = getchar()) != '\n' && c != EOF);//remove any lingering data in line
+}
+
+//if we cannot allocate memmory the program will close.
+void memoryError() {
+	printf("Could not allocate memory \n Have a nice day!");
+	exit(1);
 }
