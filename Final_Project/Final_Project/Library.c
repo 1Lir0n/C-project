@@ -325,12 +325,12 @@ void check_book_overdue(struct LibMember members[], int n) {
 		{
 			for (int j = 0; j < 4; j++) {
 				if (cnt[j] == 1) {
-					printf("\n");
 					printf("Book: %s, by: %s is overdue.\n", members[i].LoanBooks[j].BookName, members[i].LoanBooks[j].AuthorName);
 					cnt[j] = 0;
 				}
 			}
 			print_member(&members[i]);
+			printf("\n");
 		}
 	}
 	if (!over) {
