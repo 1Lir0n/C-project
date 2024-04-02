@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <time.h>
+#include <windows.h>
 #include "Library.h"
 
 
@@ -72,13 +73,13 @@ int menu() {
 //E.
 
 //adds member data to the total members and sorts it
-void add_member(struct LibMember members[], int *n) {
+void add_member(struct LibMember members[], int* n) {
 
 	if (n == 300) {
 		printf("Exceeded the allowed member count.\n");
 		return;
 	}
-	struct Date date = {0,0,0};
+	struct Date date = { 0,0,0 };
 	char buffer[100] = { 0 };
 
 	//Name	
@@ -88,11 +89,11 @@ void add_member(struct LibMember members[], int *n) {
 		printf("Enter member's full name: \n");
 		fgets(buffer, sizeof(buffer), stdin); // Read full name from user input
 		buffer[strcspn(buffer, "\n")] = '\0';
-		if(!only_letters_and_spaces(buffer)){
+		if (!only_letters_and_spaces(buffer)) {
 			printf("Please input only letters and spaces.\n\n");
 		}
 	} while (!only_letters_and_spaces(buffer));
-	
+
 	// Dynamically allocate memory for the full name
 	members[*n].Name = (char*)malloc((strlen(buffer) + 1) * sizeof(char));
 	if (members[*n].Name == NULL) //malloc check
@@ -123,8 +124,8 @@ void add_member(struct LibMember members[], int *n) {
 	strcpy(members[*n].Id, id);
 
 	//date of birth
-	int d=0, m=0, y=0;
-	bool validDate=false;
+	int d = 0, m = 0, y = 0;
+	bool validDate = false;
 	do {
 		printf("Enter date of birth. in this format: dd mm yyyy\n");
 		if (scanf_s("%d %d %d", &d, &m, &y))
@@ -133,7 +134,7 @@ void add_member(struct LibMember members[], int *n) {
 		if (!validDate) {
 			printf("Please enter a vaild date of birth.\n\n");
 			clear();
-		}	
+		}
 	} while (!validDate);
 
 	date.Day = d;
@@ -141,7 +142,7 @@ void add_member(struct LibMember members[], int *n) {
 	date.Year = y;
 
 	members[*n].DateOfBirth = date;
-	
+
 	//default 
 	members[*n].nBooks = 0;
 
@@ -211,7 +212,7 @@ void loan_books(struct LibMember members[], int n) {
 	strcpy(m->LoanBooks[m->nBooks].AuthorName, strBuffer);
 	capitalize(m->LoanBooks[m->nBooks].AuthorName);
 
-	
+
 	// Declare a variable to hold the current time
 	time_t currentTime;
 
@@ -223,9 +224,9 @@ void loan_books(struct LibMember members[], int n) {
 	int d = localTime->tm_mday;//get the day
 	localTime->tm_mday = d + 31;//move 1 month ahead
 	mktime(localTime);//make it a true date
-	struct Date rDate = { d, localTime->tm_mon+1, localTime->tm_year + 1900 };
+	struct Date rDate = { d, localTime->tm_mon + 1, localTime->tm_year + 1900 };
 	m->LoanBooks[m->nBooks].ReturnDate = rDate;
-	
+
 	m->nBooks++;//update number of loaned books
 }
 
@@ -236,12 +237,12 @@ void loan_books(struct LibMember members[], int n) {
 void return_book(struct LibMember members[], int n) {
 	char id[10] = { 0 };
 	char strBuffer[100] = { 0 };
-	bool bookFound=false;
+	bool bookFound = false;
 
 	//first finds and show the member:
 
 	//asks for id and returns to menu if invalid
-	if(!getId(id))
+	if (!getId(id))
 		return;
 	//finds member
 	int index = search_id(members, n, id);
@@ -273,7 +274,7 @@ void return_book(struct LibMember members[], int n) {
 		//(it is faster to search for book and create new array together)
 		struct Book loan[4] = { 0 };
 		int j = 0;
-		for (int i = 0; i < members[index].nBooks;i++) {
+		for (int i = 0; i < members[index].nBooks; i++) {
 			if (strcmp(members[index].LoanBooks[i].BookName, name) != 0) {
 				loan[j] = members[index].LoanBooks[i];
 				j++;
@@ -284,8 +285,8 @@ void return_book(struct LibMember members[], int n) {
 				free(members[index].LoanBooks[i].AuthorName);
 			}
 		}
-		
-		if (bookFound){
+
+		if (bookFound) {
 			members[index].nBooks -= 1;
 			*members[index].LoanBooks = *loan;
 			printf("The book: %s was removed successfully.\n", name);
@@ -316,7 +317,7 @@ void check_book_overdue(struct LibMember members[], int n) {
 			date.tm_year = members[i].LoanBooks[j].ReturnDate.Year - 1900;
 			time_t time1 = mktime(&date);
 			time_t time2 = time(NULL);
-			if (time1 > time2) {
+			if (time1 < time2) {
 				cnt[j] = 1;
 				over = true;
 			}
@@ -344,8 +345,8 @@ void check_book_overdue(struct LibMember members[], int n) {
 
 //delete a member via ID
 void delete_member(struct LibMember members[], int* nMem) {
-	char id[10] = {0};
-	
+	char id[10] = { 0 };
+
 	//asks for id and returns to menu if invalid
 	if (!getId(id))
 		return;
@@ -376,6 +377,7 @@ void delete_member(struct LibMember members[], int* nMem) {
 
 
 //J.
+
 
 //prints the array data
 void print_members(struct LibMember members[], int n) {
@@ -414,10 +416,10 @@ int main() {
 		userInput = menu();
 			 if (userInput == 1) add_member(members, &nMem);
 		else if (userInput == 2) loan_books(members, nMem);
-		else if (userInput == 3) return_book(members,nMem);
+		else if (userInput == 3) return_book(members, nMem);
 		else if (userInput == 4) check_book_overdue(members, nMem);
-		else if (userInput == 5) delete_member(members,&nMem);
+		else if (userInput == 5) delete_member(members, &nMem);
 		else if (userInput == 6) print_members(members, nMem);
-		else if (userInput == 7) quit(members,nMem);
+		else if (userInput == 7) quit(members, nMem);
 	}
 }
