@@ -1,6 +1,2 @@
-﻿  Library.c
-C:\Users\liron\source\repos\C-project\Final_Project\Final_Project\Library.h(88,8): warning C4013: 'isdigit' undefined; assuming extern returning int
-  (compiling source file 'Library.c')
-  
-C:\Users\liron\source\repos\C-project\Final_Project\Final_Project\Library.c(77,8): warning C4047: '==': 'int *' differs in levels of indirection from 'int'
+﻿  Program.c
   Final_Project.vcxproj -> C:\Users\liron\source\repos\C-project\Final_Project\x64\Debug\Final_Project.exe

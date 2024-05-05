@@ -15,6 +15,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Program.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Library.c">
       <Filter>Source Files</Filter>
     </ClCompile>

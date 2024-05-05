@@ -5,6 +5,15 @@
 #include <stdbool.h>
 #include <time.h>
 
+#ifndef LIBRARY_H
+#define LIBRARY_H
+
+#define DEBUG_PRINT printf("debug here.")
+#define MAX_BOOKS 4
+#define ID_SIZE 10
+#define ID_BUFF 11
+#define NAME_BUFF 100
+
 //Date object| dd/mm/yyyy
 struct Date
 {
@@ -25,131 +34,41 @@ struct Book
 struct LibMember
 {
 	char* Name; //str
-	char Id[10]; //str
+	char Id[ID_SIZE]; //str
 	struct Date DateOfBirth; //date
 	int nBooks; //int | starts at 0
-	struct Book LoanBooks[4]; //array of books
+	struct Book LoanBooks[MAX_BOOKS]; //array of books
 };
 
 //capitalize words in string
-void capitalize(char str[]) {
-	for (int i = 0; str[i] != '\0'; i++) {
-		//check first character is lowercase alphabet
-		if (i == 0) {
-			if ((str[i] >= 'a' && str[i] <= 'z'))
-				str[i] = str[i] - 32; //subtract 32 to make it capital
-			continue; //continue to the loop
-		}
-		if (str[i] == ' ') //check space
-		{
-			//if space is found, check next character
-			++i;
-			if (str[i] == '\0') return;
-			//check next character is lowercase alphabet
-			if (str[i] >= 'a' && str[i] <= 'z') {
-				str[i] = str[i] - 32; //subtract 32 to make it capital
-				continue; //continue to the loop
-			}
-		}
-		else {
-			//all other uppercase characters should be in lowercase
-			if (str[i] >= 'A' && str[i] <= 'Z')
-				str[i] = str[i] + 32; //subtract 32 to make it small/lowercase
-		}
-	}
-}
+void capitalize(char str[]);
 
 //checks if string is made from only letters and spaces
-bool only_letters_and_spaces(char* text) {
-	while (*text != '\0') {
-		// Check if the character is an uppercase letter (A-Z)
-		if ((*text >= 'A' && *text <= 'Z') ||
-			// Check if the character is a lowercase letter (a-z)
-			(*text >= 'a' && *text <= 'z') ||
-			// Check if the character is a space
-			(*text == ' ')) {
-			text++;
-		}
-		else {
-			return false;
-		}
-	}
-	return true;
-}
+bool only_letters_and_spaces(char* text);
 
 //checks if the provided id is valid (9 digits)
-bool valid_id(char Id[]) {
-	if (strlen(Id) > 9) {
-		return false;
-	}
-	//checks if the char is comprised of only digits
-	for (int i = 0; i < 9; i++)
-	{
-		if (!isdigit(Id[i]))
-			return false;
-	}
-	return true;
-}
+bool valid_id(char Id[]);
+
 //for registerd members, asks for id and checks it
-bool getId(char id[]) {
-	printf("Enter member's id:\n");
-	scanf("%10s", id);
-	if (!valid_id(id)) {
-		printf("not a valid id.\n");
-		return 0;
-	}
-	return 1;
-}
+bool getId(char id[]);
 
 
 //checks if given id is used already
-bool id_exist(struct LibMember mem[], int n, char id[]) {
-	for (int i = 0; i < n; i++) {
-		if (strcmp(mem[i].Id, id) == 0) {
-			return true;
-		}
-	}
-	return false;
-}
+bool id_exist(struct LibMember mem[], int n, char id[]);
 
 // Function to swap two library members
-void swap_members(struct LibMember* a, struct LibMember* b) {
-	struct LibMember temp = *a;
-	*a = *b;
-	*b = temp;
-}
+void swap_members(struct LibMember* a, struct LibMember* b);
 
 //sorts members by ID
-void sort_members(struct LibMember mem[], int n) {
-	int i, j;
-	for (i = 0; i < n - 1; i++) {
-		// Last i elements are already in place
-		for (j = 0; j < n - i - 1; j++) {
-			if (strcmp(mem[j].Id, mem[j + 1].Id) > 0 || mem[j].Id == 0) {
-				// Swap if the current element is greater than the next
-				swap_members(&mem[j], &mem[j + 1]);
-			}
-		}
-	}
-}
+void sort_members(struct LibMember mem[], int n);
 
-bool contains_one(const int array[], int size) {
-	for (int i = 0; i < size; i++) {
-		if (array[i] == 1) {
-			return true; // If 1 is found, return true
-		}
-	}
-	return false; // If no 1 is found, return false
-}
+//return true if 1 is found and false if not
+bool contains_one(const int array[], int size);
 
 //clears lingering text data
-void clear() {
-	int c = 0;
-	while ((c = getchar()) != '\n' && c != EOF);//remove any lingering data in line
-}
+void clear();
 
 //if we cannot allocate memmory the program will close.
-void memoryError() {
-	printf("Could not allocate memory \n Have a nice day!");
-	exit(1);
-}
+void memoryError();
+
+#endif //LIBRARY_H
