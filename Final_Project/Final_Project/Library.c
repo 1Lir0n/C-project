@@ -8,9 +8,8 @@
 #include "Library.h"
 
 
-
-//A. Inside of Library.h
-
+//A.
+// definitions and simple functions (Library.h)
 
 
 //B.
@@ -75,7 +74,7 @@ int menu() {
 //adds member data to the total members and sorts it
 void add_member(struct LibMember members[], int* n) {
 
-	if (n == 300) {
+	if (*n == 300) {
 		printf("Exceeded the allowed member count.\n");
 		return;
 	}
@@ -126,11 +125,20 @@ void add_member(struct LibMember members[], int* n) {
 	//date of birth
 	int d = 0, m = 0, y = 0;
 	bool validDate = false;
+	time_t Time;
+	struct tm* localTime;
+	time(&Time);
+	localTime = localtime(&Time);
 	do {
 		printf("Enter date of birth. in this format: dd mm yyyy\n");
-		if (scanf_s("%d %d %d", &d, &m, &y))
-			if ((d > 0 && d <= 30) && (m > 0 && m <= 12) && (y >= 1900))
-				validDate = true;
+		if (scanf_s("%d %d %d", &d, &m, &y)) {
+			if (!(y > localTime->tm_year + 1900 || y < 1900))
+				if (y == localTime->tm_year + 1900) {
+					if ((d > 0 && d <= localTime->tm_mday) && (m > 0 && m <= localTime->tm_mon + 1)) validDate = true;
+				}
+				else if ((d > 0 && d <= 30) && (m > 0 && m <= 12))
+					validDate = true;
+		}
 		if (!validDate) {
 			printf("Please enter a vaild date of birth.\n\n");
 			clear();
@@ -228,6 +236,7 @@ void loan_books(struct LibMember members[], int n) {
 	m->LoanBooks[m->nBooks].ReturnDate = rDate;
 
 	m->nBooks++;//update number of loaned books
+
 }
 
 
@@ -297,6 +306,7 @@ void return_book(struct LibMember members[], int n) {
 
 		free(name);
 	}
+
 }
 
 
@@ -324,6 +334,7 @@ void check_book_overdue(struct LibMember members[], int n) {
 		}
 		if (contains_one(cnt, 4))
 		{
+			printf("\n");
 			for (int j = 0; j < 4; j++) {
 				if (cnt[j] == 1) {
 					printf("Book: %s, by: %s is overdue.\n", members[i].LoanBooks[j].BookName, members[i].LoanBooks[j].AuthorName);
@@ -331,7 +342,6 @@ void check_book_overdue(struct LibMember members[], int n) {
 				}
 			}
 			print_member(&members[i]);
-			printf("\n");
 		}
 	}
 	if (!over) {
@@ -395,6 +405,10 @@ void print_members(struct LibMember members[], int n) {
 void quit(struct LibMember members[], int nMem) {
 	// Free dynamically allocated memory for each member's name
 	for (int i = 0; i < nMem; i++) {
+		for (int j = 0; j < members[i].nBooks; j++) {
+			free(members[i].LoanBooks[j].BookName);
+			free(members[i].LoanBooks[j].AuthorName);
+		}
 		free(members[i].Name);
 	}
 
@@ -403,6 +417,15 @@ void quit(struct LibMember members[], int nMem) {
 	exit(0);
 }
 
+void update_choice(int userInput, struct LibMember* members, int* nMem) {
+	if (userInput == 1) add_member(members, &nMem);
+	else if (userInput == 2) loan_books(members, nMem);
+	else if (userInput == 3) return_book(members, nMem);
+	else if (userInput == 4) check_book_overdue(members, nMem);
+	else if (userInput == 5) delete_member(members, &nMem);
+	else if (userInput == 6) print_members(members, nMem);
+	else if (userInput == 7) quit(members, nMem);
+}
 
 
 //L
@@ -414,12 +437,6 @@ int main() {
 	int userInput = 0;
 	while (true) {
 		userInput = menu();
-			 if (userInput == 1) add_member(members, &nMem);
-		else if (userInput == 2) loan_books(members, nMem);
-		else if (userInput == 3) return_book(members, nMem);
-		else if (userInput == 4) check_book_overdue(members, nMem);
-		else if (userInput == 5) delete_member(members, &nMem);
-		else if (userInput == 6) print_members(members, nMem);
-		else if (userInput == 7) quit(members, nMem);
+		update_choice(userInput, &members, &nMem);
 	}
 }
